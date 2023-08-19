@@ -55,6 +55,8 @@ This is a single-header library, so you only need to copy file "ShaderCrashingAs
    cmdList->SetGraphicsRootDescriptorTable(rootParameterIndex, myDescriptorHeap->GetGPUHandle());
    ```
 
+   If the resource is not bound, the shader assert doesn't trigger a crash.
+
 *If these steps required for resource binding in D3D12 look too complicated for you, this article can help understand them: [Direct3D 12: Long Way to Access Data](https://asawicki.info/news_1754_direct3d_12_long_way_to_access_data).*
 
 ## Integration in HLSL shader code
@@ -87,6 +89,8 @@ A GPU memory page fault generally results in an undefined behavior. The applicat
 However, with **[Radeon GPU Detective](https://gpuopen.com/radeon-gpu-detective/)** active (Radeon Developer Panel launched and set to "Crash Analysis" mode), such crash seems to be captured more reliably. Application still observes D3D12 error, but RGD can then show information about the render pass and draw call or dispatch that triggered it. To make sure it was the assert from this library and not some other GPU failure, look for resources named "ShaderCrashingAssert" in the RGD output. For more information, check [RGD tutorial](https://gpuopen.com/learn/rgd_1_0_tutorial/) or documentation of the tool: [Quickstart Guide](https://radeon-gpu-detective.readthedocs.io/en/latest/quickstart.html) and [Help Manual](https://radeon-gpu-detective.readthedocs.io/en/latest/help_manual.html).
 
 **Please remember that this whole library is a hack and may not be fully reliable. On some systems, GPUs, with some applications, crash may not happen despite the assert is triggered. Please always test asserting unconditionally before using this library for debugging.**
+
+One possible explanation is that because the library creates and destroys a small buffer, then the application creates some more resources, they may have the same address assigned, so the address is not invalid. If this is the case, possibly moving `Init()` call later in the application initialization code can help.
 
 # Technical considerations
 
