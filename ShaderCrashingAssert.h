@@ -132,6 +132,14 @@ public:
         return hr;
     }
 
+    ~ShaderCrashingAssertContext()
+    {
+        if (m_pDescriptorHeap)
+        {
+            m_pDescriptorHeap->Release();
+        }
+    }
+
     D3D12_CPU_DESCRIPTOR_HANDLE GetUAVCPUDescriptorHandle()
     {
         return m_pDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
