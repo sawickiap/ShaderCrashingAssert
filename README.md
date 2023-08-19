@@ -55,7 +55,7 @@ This is a single-header library, so you only need to copy file "ShaderCrashingAs
    cmdList->SetGraphicsRootDescriptorTable(rootParameterIndex, myDescriptorHeap->GetGPUHandle());
    ```
 
-*If these steps required for resource binding in D3D12 look too compilcated for you, this article can help understand them: [Direct3D 12: Long Way to Access Data](https://asawicki.info/news_1754_direct3d_12_long_way_to_access_data).*
+*If these steps required for resource binding in D3D12 look too complicated for you, this article can help understand them: [Direct3D 12: Long Way to Access Data](https://asawicki.info/news_1754_direct3d_12_long_way_to_access_data).*
 
 ## Integration in HLSL shader code
 
@@ -94,7 +94,7 @@ However, with **[Radeon GPU Detective](https://gpuopen.com/radeon-gpu-detective/
 
 The library creates a small UAV buffer, a raw UAV descriptor for it, declares a `RWByteAddressBuffer` resource in shader code, and performs a `Store()` to it in the main assert macro. The buffer and its heap is released soon after creation, so the descriptor points to an incorrect address, which triggers the page fault.
 
-The need to use a UAV resouce is an inconvenience, but it is necessary because shaders don't have a free-form pointers to be able to just reach out to some address.
+The need to use a UAV resource is an inconvenience, but it is necessary because shaders don't have a free-form pointers to be able to just reach out to some address.
 
 D3D Debug Layer doesn't report this logic as an error because it doesn't track the content of the descriptors. GPU-based validation may be able to find it - I didn't check.
 
@@ -108,7 +108,7 @@ It would be nice to be able to return additional data when an assert is hit. For
 
    2. Possibly, higher bits could be used if we know that the beginning of the buffer is aligned to some large number. Theoretically, a `ID3D12Heap` can be created with specific alignment, notably `D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT`, equal to 4194304 = 4 MB, which is required when placing MSAA textures inside. Unfortunately, it doesn't work. Even when using this alignment, also with `D3D12_HEAP_FLAG_NONE` instead of `D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS`, RGD still shows an address like 0x2008f9000, so the heap is still aligned only to 4K.
 
-2. Other potential solution is to simply create several buffers and choose between them when triggering the assert. They could be then distinguished by their string names or differnet sizes in the RGD report. If you are interested in having this feature, please let me know by creating an Issue ticket in this repository.
+2. Other potential solution is to simply create several buffers and choose between them when triggering the assert. They could be then distinguished by their string names or different sizes in the RGD report. If you are interested in having this feature, please let me know by creating an Issue ticket in this repository.
 
 # Final words
 
