@@ -116,4 +116,4 @@ It would be nice to be able to return additional data when an assert is hit. For
 
 # Final words
 
-Thanks to Jasper Bekkers from Traverse Research for the inspiration!
+Thanks to Jasper Bekkers and Manon Oomen from Traverse Research for the inspiration!
